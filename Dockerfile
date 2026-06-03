@@ -9,8 +9,8 @@ WORKDIR /app
 # Copy only package files to leverage Docker cache
 COPY package*.json ./
 
-# Install dependencies with cache optimization
-RUN npm ci --prefer-offline --no-audit --maxsockets 1
+# Install dependencies
+RUN npm install
 
 # Stage 2: Production build
 FROM node:20-alpine AS production
