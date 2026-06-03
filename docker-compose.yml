@@ -1,0 +1,63 @@
+version: '3.8'
+
+services:
+  # =========================================================================
+  # Cloud Monitor API Service
+  # =========================================================================
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      cache_from:
+        - cloud-monitor:latest
+    
+    container_name: cloud-monitor-api
+    
+    image: cloud-monitor:latest
+    
+    ports:
+      - "${PORT:-3000}:3000"
+    
+    environment:
+      NODE_ENV: ${NODE_ENV:-production}
+      PORT: 3000
+    
+    # Resource limits
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 512M
+        reservations:
+          cpus: '0.5'
+          memory: 256M
+    
+    # Restart policy
+    restart: unless-stopped
+    
+    # Health check
+    healthcheck:
+      test: ["CMD", "node", "-e", "require('http').get('http://localhost:3000/api/v1/health', (r) => {if (r.statusCode !== 200) throw new Error(r.statusCode)})"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 5s
+    
+    # Logging
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    
+    # Volume (optional - for development)
+    volumes:
+      - ./src:/app/src:ro
+    
+    # Networks
+    networks:
+      - cloud-monitor-network
+
+networks:
+  cloud-monitor-network:
+    driver: bridge

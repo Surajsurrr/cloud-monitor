@@ -1,0 +1,44 @@
+# Git
+.git
+.gitignore
+.gitattributes
+
+# CI/CD
+.github
+
+# Node
+node_modules
+npm-debug.log
+npm-error.log
+yarn-error.log
+yarn.lock
+package-lock.json
+
+# IDE
+.vscode
+.idea
+*.sublime-project
+*.sublime-workspace
+.DS_Store
+Thumbs.db
+
+# Testing & Coverage
+tests
+coverage
+.nyc_output
+jest.config.js
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Documentation
+README.md
+ARCHITECTURE.md
+
+# Root files
+docker-compose.yml
+docker-compose.override.yml
+Dockerfile
+.dockerignore
