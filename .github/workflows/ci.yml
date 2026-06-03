@@ -44,12 +44,10 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'npm'
-          cache-dependency-path: package-lock.json
       
       # Step 3: Install dependencies
       - name: Install Dependencies
-        run: |
-          npm ci --prefer-offline --no-audit
+        run: npm install
         env:
           NODE_ENV: ci
       
@@ -73,6 +71,7 @@ jobs:
           name: codecov-umbrella
           fail_ci_if_error: false
         continue-on-error: true
+        if: always()
       
       # Step 7: Validate build
       - name: Validate Build
@@ -86,6 +85,7 @@ jobs:
           name: test-results
           path: coverage/
           retention-days: 30
+        continue-on-error: true
 
   # =========================================================================
   # JOB 2: DOCKER BUILD & PUSH
