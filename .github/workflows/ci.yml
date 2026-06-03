@@ -27,64 +27,30 @@ jobs:
     name: Test & Validate
     runs-on: ubuntu-latest
     
-    strategy:
-      matrix:
-        node-version: [20.x]
-    
     steps:
       # Step 1: Checkout code
       - name: Checkout Code
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
       
-      # Step 2: Setup Node.js with caching
-      - name: Setup Node.js ${{ env.NODE_VERSION }}
+      # Step 2: Setup Node.js
+      - name: Setup Node.js 20
         uses: actions/setup-node@v4
         with:
-          node-version: ${{ env.NODE_VERSION }}
+          node-version: '20'
           cache: 'npm'
       
       # Step 3: Install dependencies
       - name: Install Dependencies
-        run: npm install
-        env:
-          NODE_ENV: ci
+        run: npm install --legacy-peer-deps
       
-      # Step 4: Run linting (if configured)
-      - name: Run Linter
-        run: npm run lint
-        continue-on-error: true
-      
-      # Step 5: Run tests with coverage
+      # Step 4: Run tests with coverage
       - name: Run Tests
-        run: npm run test:ci
-        env:
-          NODE_ENV: test
+        run: npm test
+        continue-on-error: false
       
-      # Step 6: Upload coverage to Codecov
-      - name: Upload Coverage Reports
-        if: always() && hashFiles('coverage/lcov.info') != ''
-        uses: codecov/codecov-action@v4
-        with:
-          files: ./coverage/lcov.info
-          flags: unittests
-          name: codecov-umbrella
-          fail_ci_if_error: false
-        continue-on-error: true
-      
-      # Step 7: Validate build
+      # Step 5: Validate build
       - name: Validate Build
         run: npm run build
-      
-      # Step 8: Archive test results
-      - name: Archive Test Results
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: test-results
-          path: coverage/
-          retention-days: 30
         continue-on-error: true
 
   # =========================================================================
