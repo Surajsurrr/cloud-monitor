@@ -1,4 +1,5 @@
 // Configuration and constants for Cloud Monitor API
+// Auto-triggered CI/CD test - GitHub Actions will automatically run tests on push
 
 export const CONFIG = {
   PORT: process.env.PORT || 3000,
