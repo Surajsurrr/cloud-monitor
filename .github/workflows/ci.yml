@@ -64,6 +64,7 @@ jobs:
       
       # Step 6: Upload coverage to Codecov
       - name: Upload Coverage Reports
+        if: always() && hashFiles('coverage/lcov.info') != ''
         uses: codecov/codecov-action@v4
         with:
           files: ./coverage/lcov.info
@@ -71,7 +72,6 @@ jobs:
           name: codecov-umbrella
           fail_ci_if_error: false
         continue-on-error: true
-        if: always()
       
       # Step 7: Validate build
       - name: Validate Build
